@@ -52,7 +52,15 @@ export default function RegisterPage({ params }: { params: { locale: string } })
       });
 
       if (error) {
-        setErrorMsg(error.message);
+        if (error.message.toLowerCase().includes("rate limit") || error.status === 429) {
+          setErrorMsg(
+            ar
+              ? "تم تجاوز حد إرسال الإيميلات حالياً (Email Rate Limit Exceeded). قم بإلغاء خيار (Confirm Email) من لوحة Supabase لإلغاء هذا القيد."
+              : "Limite d'envoi d'emails dépassée (Rate limit). Désactivez 'Confirm email' dans Supabase."
+          );
+        } else {
+          setErrorMsg(error.message);
+        }
       } else {
         setSuccessMsg(
           ar
